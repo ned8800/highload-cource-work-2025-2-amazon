@@ -11,15 +11,15 @@
 
 ### **1.2. Целевая аудитория**
 
-- **Покупатели** – конечные пользователи, покупают товары
-- **Продавцы** – предприниматели и компании
-- **Партнеры по логистике** – службы доставки и возврата, службы ремонта
+- **Покупатели** – пользователи, покупают товары
+- **Продавцы** – предприниматели и компании, продают товары
+- **Партнеры по логистике** – службы доставки и возврата, службы ремонта техники
 
 ---
 
 ### **1.3. Анализ трафика и вовлеченности**
 
-_(По данным SimilarWeb [1](https://www.similarweb.com/website/amazon.com/) и внутренних отчетов Amazon)_
+_(По данным SimilarWeb [[1]](https://www.similarweb.com/website/amazon.com/) и внутренних отчетов Amazon [[4]](https://www.demandsage.com/amazon-statistics/) )_
 
 - **Всего посещений (за месяц, данные за августь 2025):** 2.7B  [[1]](https://www.similarweb.com/website/amazon.com/)
 - **Средняя продолжительность сеанса:** 6 минут [[1]](https://www.similarweb.com/website/amazon.com/)
@@ -47,21 +47,17 @@ _(По данным SimilarWeb [1](https://www.similarweb.com/website/amazon.com
   - История заказов
   - Адреса доставки
 
-#### **Функционал для продавцов (Marketplace)**
+#### **Функционал для продавцов**
 
 - Регистрация и верификация
 - Создание карточек товаров
 - Управление заказами и возвратами
 
-#### **Функционал для логистики и доставки**
+#### **Функционал для логистики**
 
-- Интеграция с Amazon Logistics и партнерами
 - Отслеживание заказов
-- Управление складами (**FBA — Fulfillment by Amazon**)
 
 ---
-
-<a name="block2"></a>
 
 ## **2. Расчет нагрузки**
 
@@ -166,6 +162,8 @@ _(По данным SimilarWeb [1](https://www.similarweb.com/website/amazon.com
 | Логистика        | Количество перемещаемых посылок в день           | 1.76M         | 20,37    | 61,11     |
 | Total            |                                                  |               | 9721,58  | 29164,74  |
 
+#### Итого:
+
 RPS = (Action \* DAU)/(24h x 60' x 60")<br>
 DAU пользователей = 60M<br>
 DAU продавцов = 2.3M<br>
@@ -190,6 +188,9 @@ DAU продавцов = 2.3M<br>
 | Логистика        | Количество перемещаемых посылок в день           | 1.76M         | 20,37    | 61,11     | 200         | 4 074       | 12 222         |
 | Total            |                                                  |               | 9721,58  | 29164,74  |             | 9 262 692.8 | 27 788 078.4   |
 
+
+#### Итого суммарно:
+
 Сеть total = 8.83 Гб/сек.<br>
 Сеть x3 total = 26.50 Гб/сек.<br>
 
@@ -202,7 +203,7 @@ DAU продавцов = 2.3M<br>
 1. https://www.similarweb.com/website/amazon.com/
 2. https://www.marketplacepulse.com/amazon/number-of-sellers
 3. https://salesduo.com/blog/amazon-statistics/
-4. https://amzscout.net/blog/amazon-statistics/#:~:text=It%20is%20estimated%20that%20the%20marketplace%20has%20over%20310%20million%20active%20users%20worldwide
+4. https://www.demandsage.com/amazon-statistics/
 5. https://www.semrush.com/website/amazon.com/overview/
 6. https://www.feedough.com/amazon-statistics-usage-revenue-key-facts/
 7. https://analyzify.com/statsup/amazon
