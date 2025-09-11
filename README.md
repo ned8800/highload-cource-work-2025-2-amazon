@@ -25,7 +25,7 @@ _(По данным SimilarWeb [1](https://www.similarweb.com/website/amazon.com
 - **Средняя продолжительность сеанса:** 6 минут [[1]](https://www.similarweb.com/website/amazon.com/)
 - **Среднее количество просмотров страниц за посещение:** 9.4 [[1]](https://www.similarweb.com/website/amazon.com/)
 - **Процент отказов:** ~31% [[1]](https://www.similarweb.com/website/amazon.com/)
-- **Количество активных продавцов:** 9M+ [[2]](https://www.marketplacepulse.com/amazon/number-of-sellers)
-- **Пользователи Amazon Prime:** 200M+ [[3]](https://www.aboutamazon.com/news/company-news/amazon-prime-has-more-than-200-million-members-globally)
+- **Количество активных продавцов:** 9M+ на момент 2021 года [[2]](https://www.marketplacepulse.com/amazon/number-of-sellers)
+- **Пользователи Amazon Prime:** 240M+ на момент лета 2025 года [[3]](https://salesduo.com/blog/amazon-statistics/)
 
 
