@@ -73,17 +73,19 @@ _(По данным SimilarWeb [1](https://www.similarweb.com/website/amazon.com
 Расчёт:
 <i>DAU = 0.2×300M = 60M</i>
 
+
+
 #### Действия пользователей
 
 | Тип пользователя | Параметр (количество на 1 пользователя в день)   | Число                                                                                                                                                                                                                              |
 | ---------------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-                                                                                                                                                                                                                       |
 | Покупатель       | Среднее количество просмотров страниц за сессию  | 8                                                                                                                                                                                                                                  |
 | Покупатель       | Количество сессий в день                         | 2                                                                                                                                                                                                                                  |
 | Покупатель       | Количество оставленных отзывов за день           | 0.13 [[8]](https://meetanshi.com/blog/amazon-seller-statistics/)[[9]](https://www.powerreviews.com/wp-content/uploads/2023/10/2023-Ratings-Reviews-Report_-Amazon-Edition-1.pdf)                                                   |
 | Покупатель       | Количество добавленных товаров в корзину за день | 3 [[12]](https://shopney.co/blog/ultimate-guide-to-increase-add-to-cart-rates/)                                                                                                                                                    |
 | Покупатель       | Количество покупок за день                       | 0.19 [[11]](https://amzscout.net/blog/amazon-statistics/)                                                                                                                                                                          |
-| Покупатель       | Количество платежей за день                      | 0.19 [[11]](https://amzscout.net/blog/amazon-statistics/)                                                                                                                                                                                                                                                           |
+| Покупатель       | Количество платежей за день                      | 0.19 [[11]](https://amzscout.net/blog/amazon-statistics/)                                                                                                                                                                          |
+| Продавец         | Регистрация, верификация, обновление профиля     | 0.003 [V]                                                                                                                                                                                                                          |
 | Продавец         | Создание карточек товаров в день                 | 0.7                                                                                                                                                                                                                                |
 | Продавец         | Количество отправляемых посылок в день           | 0.6 [[6]](https://www.feedough.com/amazon-statistics-usage-revenue-key-facts/)                                                                                                                                                     |
 | Продавец         | Количество возвращаемых посылок в день           | 0.1 [[10]](https://nichesources.com/amazon-return-rate.html#:~:text=Amazon's%20return%20rate%20for%20online,support%20can%20help%20reduce%20returns.)                                                                              |
@@ -112,6 +114,8 @@ _(По данным SimilarWeb [1](https://www.similarweb.com/website/amazon.com
 2 x 8 x 35 x 0.08 x 0.08 = 3 товара в день пользователь добавляет в корзину
 
 ---
+
+
 
 Распределение нагрузки по странам [[5]](https://www.semrush.com/website/amazon.com/overview/)
 
