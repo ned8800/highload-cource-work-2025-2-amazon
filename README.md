@@ -326,7 +326,7 @@ DAU продавцов = 4.37M<br>
 
 <a name="block4"></a>
 
-## **4. Локальная балансировка нагрузки** [[15]](https://docs.amazonaws.cn/en_us/eks/latest/userguide/aws-load-balancer-controller.html)
+## **4. Локальная балансировка нагрузки** [[17]](https://docs.amazonaws.cn/en_us/eks/latest/userguide/aws-load-balancer-controller.html)
 
 ### Алгоритмы балансировки нагрузки
 
@@ -391,3 +391,4 @@ DAU продавцов = 4.37M<br>
 14. https://www.semrush.com/website/reddit.com/overview/
 15. https://github.com/bigronimax/vk-highload-reddit?tab=readme-ov-file#user-content-fn-3-903c33ed360deb17d81bc2fe0cf4d989
 16. https://backlinko.com/reddit-users
+17. https://docs.amazonaws.cn/en_us/eks/latest/userguide/aws-load-balancer-controller.html
