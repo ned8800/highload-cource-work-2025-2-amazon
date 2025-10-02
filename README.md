@@ -259,7 +259,9 @@ DAU продавцов = 4.37M<br>
 ### **3.2. Выбрать физическое расположение датацентров (базово одного)**
 
 ![amazon server possible location](img/USA.png)
+
 ![USA density](img/population.png)[https://worldpopulationreview.com/state-rankings/state-densities]
+
 ![USA density](img/usa_internet.png)[https://www.internetexchangemap.com/]
 
 Для маркетплейса, расположенного в США, лучше использовать несколько датацентров в разных регионах с наибольшей аудиторией для низкой задержки. Основные регионы для размещения датацентров:
