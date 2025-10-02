@@ -300,9 +300,9 @@ DAU продавцов = 4.37M<br>
 - Amazon Route 53 latency-based DNS (на основе геолокации пользователя)
 - Использование health checks для автоматического перенаправления трафика в случае сбоя одного из датацентров.
 
-<b>Amazon Route 53</b> - Это надёжный DNS сервис, с достаточно удобным API для редактирования, добавления и удаления записей. [[13]](http://aws.amazon.com/route53/)
+<b>Amazon Route 53</b> - Это надёжный DNS сервис, с достаточно удобным API для редактирования, добавления и удаления записей. [[18]](http://aws.amazon.com/route53/)
 
-<b>Cloudflare</b> — это глобальная сеть доставки контента (CDN), которая предоставляет решения для повышения безопасности и производительности веб-сайтов.[[14]](https://www.cloudflare.com/ru-ru/)
+<b>Cloudflare</b> — это глобальная сеть доставки контента (CDN), которая предоставляет решения для повышения безопасности и производительности веб-сайтов.[[19]](https://www.cloudflare.com/ru-ru/)
 
 ### **3.4. Распределение RPS по серверам в городах**
 
@@ -392,3 +392,6 @@ DAU продавцов = 4.37M<br>
 15. https://github.com/bigronimax/vk-highload-reddit?tab=readme-ov-file#user-content-fn-3-903c33ed360deb17d81bc2fe0cf4d989
 16. https://backlinko.com/reddit-users
 17. https://docs.amazonaws.cn/en_us/eks/latest/userguide/aws-load-balancer-controller.html
+18. http://aws.amazon.com/route53/
+19. https://www.cloudflare.com/ru-ru/
+
