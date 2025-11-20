@@ -1,0 +1,163 @@
+Table users {
+  user_id uuid [pk]
+  name text
+  email text [unique]
+  phone text [unique]
+  password_hash text
+  is_blocked boolean
+  created_at timestamp
+  updated_at timestamp
+  metadata jsonb
+}
+
+Table sellers {
+  seller_id uuid [pk]
+  company_name text
+  contact_email text
+  contact_phone text
+  is_verified boolean
+  seller_rating_sum decimal
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table products_with_categories {
+  product_id uuid [pk]
+  seller_id uuid [ref: > sellers.seller_id]
+  name text
+  description_short text
+  description_full text
+  price decimal
+  discount_price decimal
+  main_image_url text
+  gallery_image_urls text[]
+  is_age_restricted boolean
+  sum_rating decimal
+  created_at timestamp
+  updated_at timestamp
+
+  
+  seller_name text
+  seller_rating_sum decimal
+  seller_is_verified boolean
+
+
+  category jsonb
+}
+
+Table categories {
+  category_id uuid [pk]
+  name text
+  path text
+  parent_id uuid [ref: > categories.category_id]
+  product_count integer
+}
+
+Table characteristics_product {
+  characteristic_id uuid [pk]
+  product_id uuid [ref: > products_with_categories.product_id]
+  name text
+  value text
+  ed_izmereniya text
+}
+
+Table orders {
+  order_id uuid [pk]
+  user_id uuid [ref: > users.user_id]
+  status text
+  subtotal decimal
+  tax decimal
+  shipping_cost decimal
+  total decimal
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table order_items {
+  order_item_id uuid [pk]
+  order_id uuid [ref: > orders.order_id]
+  product_id uuid [ref: > products_with_categories.product_id]
+  product_name text
+  product_image text
+  product_main_image text
+  unit_price decimal
+  quantity integer
+  total_price decimal
+}
+
+Table cart_items {
+  cart_item_id uuid [pk]
+  user_id uuid [ref: > users.user_id]
+  product_id uuid [ref: > products_with_categories.product_id]
+  product_name text
+  product_main_image text
+  unit_price decimal
+  quantity integer
+  added_at timestamp
+}
+
+Table reviews {
+  review_id uuid [pk]
+  user_id uuid [ref: > users.user_id]
+  seller_id uuid [ref: > sellers.seller_id]
+  product_id uuid [ref: > products_with_categories.product_id]
+  order_id uuid [ref: > orders.order_id]
+  rating integer
+  title text
+  comment text
+  product_name text
+  images text[]
+  is_verified boolean
+  created_at timestamp
+}
+
+Table addresses {
+  address_id uuid [pk]
+  user_id uuid [ref: > users.user_id]
+  type text
+  recipient text
+  line1 text
+  line2 text
+  city text
+  state text
+  postal_code text
+  country text
+  phone text
+  is_default boolean
+}
+
+Table payment_methods {
+  payment_method_id uuid [pk]
+  user_id uuid [ref: > users.user_id]
+  type text
+  details jsonb
+  is_default boolean
+  added_at timestamp
+}
+
+Table shipments {
+  shipment_id uuid [pk]
+  order_id uuid [ref: > orders.order_id]
+  carrier text
+  tracking_number text
+  status text
+  shipped_at timestamp
+  estimated_delivery timestamp
+  delivered_at timestamp
+}
+
+Table search_index {
+  product_id uuid [pk, ref: > products_with_categories.product_id]
+  search_vector text
+  suggest_terms text[]
+  facets jsonb
+}
+
+Table sessions {
+  session_id uuid [pk]
+  user_id uuid [ref: > users.user_id]
+  ip_address text
+  device_info jsonb
+  created_at timestamp
+  expires_at timestamp
+}

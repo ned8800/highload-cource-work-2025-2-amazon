@@ -411,79 +411,318 @@ DAU продавцов = 4.37M<br>
 
 ### **5.1 Описать логическую схему данных**
 
-![amazon db schema](img/dbdiagram.png)
+![amazon db schema](img/db_10.png)
+
 
 UUID:
 
-    user_id, seller_id, product_id, order_id, cart_id, review_id, logistics_id, image_id.
-
-INTEGER:
-
-    stock_quantity (в таблице products), quantity (в таблицах order_items, cart_items).
-
-TIMESTAMP:
-
-    created_at, updated_at (во всех таблицах).
-
-DECIMAL:
-
-    price, total_amount, rating (в таблицах products, orders, sellers, reviews).
+    user_id (users)
+    seller_id (sellers)
+    product_id (products_with_categories)
+    category_id (categories)
+    characteristic_id (characteristics_product)
+    order_id (orders)
+    order_item_id (order_items)
+    cart_item_id (cart_items)
+    review_id (reviews)
+    address_id (addresses)
+    payment_method_id (payment_methods)
+    shipment_id (shipments)
+    session_id (sessions)
 
 TEXT:
 
-    description (в таблице products), comment (в таблице reviews).
+    name (users, sellers, products_with_categories, characteristics_product, orders, order_items, cart_items, reviews, addresses, payment_methods, shipments, sessions)
+    email (users, sellers)
+    phone (users, sellers, addresses)
+    password_hash (users)
+    contact_email (sellers)
+    contact_phone (sellers)
+    description_short (products_with_categories)
+    description_full (products_with_categories)
+    main_image_url (products_with_categories)
+    product_name (order_items, cart_items, reviews)
+    product_image (order_items)
+    product_main_image (order_items, cart_items)
+    title (reviews)
+    comment (reviews)
+    type (addresses, payment_methods)
+    recipient (addresses)
+    line1 (addresses)
+    line2 (addresses)
+    city (addresses)
+    state (addresses)
+    postal_code (addresses)
+    country (addresses)
+    carrier (shipments)
+    status (orders, shipments)
+    ip_address (sessions)
+
+DECIMAL:
+
+    price (products_with_categories)
+    discount_price (products_with_categories)
+    seller_rating_sum (sellers, products_with_categories)
+    subtotal (orders)
+    tax (orders)
+    shipping_cost (orders)
+    total (orders)
+    unit_price (order_items, cart_items)
+    total_price (order_items)
+    sum_rating (products_with_categories)
 
 BOOLEAN:
 
-    is_primary (в таблице product_images).
+    is_blocked (users)
+    is_verified (sellers, reviews)
+    is_age_restricted (products_with_categories)
+    is_default (addresses, payment_methods)
+
+TIMESTAMP:
+
+    created_at (users, sellers, products_with_categories, categories, characteristics_product, orders, order_items, cart_items, reviews, addresses, payment_methods, shipments, sessions)
+    updated_at (users, sellers, products_with_categories, categories, characteristics_product, orders, order_items, cart_items, reviews, addresses, payment_methods)
+    shipped_at (shipments)
+    estimated_delivery (shipments)
+    delivered_at (shipments)
+    added_at (cart_items, payment_methods)
+    expires_at (sessions)
+
+JSONB:
+
+    metadata (users)
+    category (products_with_categories)
+    details (payment_methods)
+    device_info (sessions)
+    facets (search_index)
+
+TEXT:
+
+    gallery_image_urls (products_with_categories)
+    suggest_terms (search_index)
+    images (reviews)
+
+INTEGER:
+
+    product_count (categories)
+    quantity (order_items, cart_items)
+    rating (reviews)
 
 
-| Таблица	       | Размер строки (байт)	| Количество записей в сутки	| Общий объем в сутки (байт) | 
-| -------------- | -------------------- | --------------------------  | -------------------------- |   
-| users	         | 211                  | 914193,5484                 | 192894838,7 | 
-| sellers        | 155                  | 16912,58065                 | 2621450     | 
-| products       | 718                  | 914193,5484                 | 656390967,7 | 
-| product_images | 249                  | 5485161,29                  | 1365805161  | 
-| orders         | 76                   | 54851612,9                  | 4168722581  | 
-| order_items    | 60                   | 164554838,7                 | 9873290323  | 
-| cart           | 48                   | 914193,5484                 | 43881290,32 | 
-| cart_items     | 52                   | 2742580,645                 | 142614193,5 | 
-| reviews        | 568                  | 118845,1613                 | 67504051,61 | 
-| review_images  | 248                  | 237690,3226                 | 58947200    | 
-| logistics      | 118                  | 8044903,226                 | 949298580,6 |  
 
 
 
-<b>users</b> 16 (UUID) + 50 (name) + 50 (email) + 15 (phone) + 64 (password_hash) + 8 (created_at) + 8 (updated_at) = 211
+| Таблица	                  | Размер строки (байт)    | Количество записей в сутки	| Общий объем в сутки (байт) |
+|---------------------------|-------------------------|-----------------------------|----------------------------|
+| users	                    | 211	                    | 914193,5484	                | 192894838,7	               |
+| sellers	                  | 155	                    | 16912,58065	                | 2621450	                   |
+| products_with_categories  | 1000	                  | 914193,5484	                | 914193548,4	               |
+| categories	              | 136	                    | 16912,58065	                | 2302345,3	                 |
+| characteristics_product   | 147	                    | 5485161,29	                | 805034193,63	             |
+| orders	                  | 76	                    | 54851612,9	                | 4168722581,4	             |
+| order_items	              | 178	                    | 164554838,7	                | 29308349654,6	             |
+| cart_items	              | 178	                    | 2742580,645	                | 488563505,49	             |
+| reviews	                  | 893	                    | 118845,1613	                | 106960645,19	             |
+| addresses	                | 359	                    | 16912,58065	                | 6096167,11	               |
+| payment_methods	          | 81	                    | 16912,58065	                | 1370923,05	               |
+| shipments	                | 176	                    | 8044903,226	                | 1415592956,4	             |
+| search_index	            | 736	                    | 5485161,29	                | 4046391844,44	             |
+| sessions	                | 83	                    | 16912,58065	                | 1403794,19	               |
 
-<b>sellers</b> 16 (UUID) + 50 (company_name) + 50 (contact_email) + 15 (contact_phone) + 8 (rating) + 8 (created_at) + 8 (updated_at) = 155
 
-<b>products</b> 16 (UUID) + 16 (seller_id) + 100 (name) + 500 (description) + 8 (price) + 50 (category) + 4 (stock_quantity) + 8 (rating) + 8 (created_at) + 8 (updated_at) = 718
 
-<b>product_images</b> 16 (UUID) + 16 (product_id) + 200 (image_url) + 1 (is_primary) + 8 (created_at) + 8 (updated_at) = 249
 
-<b>orders</b> 16 (UUID) + 16 (user_id) + 20 (status) + 8 (total_amount) + 8 (created_at) + 8 (updated_at) = 76
+Таблица users:
 
-<b>order_items</b> 16 (UUID) + 16 (order_id) + 16 (product_id) + 4 (quantity) + 8 (price_at_purchase) = 60
+    UUID (user_id): 16 байт
+    TEXT (name): 50 байт
+    TEXT (email): 50 байт
+    TEXT (phone): 15 байт
+    TEXT (password_hash): 64 байта
+    BOOLEAN (is_blocked): 1 байт
+    TIMESTAMP (created_at): 8 байт
+    TIMESTAMP (updated_at): 8 байт
+    JSONB (metadata): 20 байт
 
-<b>cart</b> 16 (UUID) + 16 (user_id) + 8 (created_at) + 8 (updated_at) = 48
+Суммарно: 211 байт
 
-<b>cart_items</b> 16 (UUID) + 16 (cart_id) + 16 (product_id) + 4 (quantity) = 52
+Таблица sellers:
 
-<b>reviews</b> 16 (UUID) + 16 (user_id) + 16 (product_id) + 4 (rating) + 500 (comment) + 8 (created_at) + 8 (updated_at) = 568
+    UUID (seller_id): 16 байт
+    TEXT (company_name): 50 байт
+    TEXT (contact_email): 50 байт
+    TEXT (contact_phone): 15 байт
+    BOOLEAN (is_verified): 1 байт
+    DECIMAL (seller_rating_sum): 8 байт
+    TIMESTAMP (created_at): 8 байт
+    TIMESTAMP (updated_at): 8 байт
 
-<b>review_images</b> 16 (UUID) + 16 (review_id) + 200 (image_url) + 8 (created_at) + 8 (updated_at) = 248
+Итого: 155 байт
 
-<b>logistics</b> 16 (UUID) + 16 (order_id) + 50 (tracking_number) + 20 (status) + 8 (shipped_at) + 8 (delivered_at) = 118
+Таблица products_with_categories:
+
+    UUID (product_id): 16 байт
+    UUID (seller_id): 16 байт
+    TEXT (name): 100 байт
+    TEXT (description_short): 500 байт
+    TEXT (description_full): 500 байт
+    DECIMAL (price): 8 байт
+    DECIMAL (discount_price): 8 байт
+    TEXT (main_image_url): ~100 байт
+    TEXT[] (gallery_image_urls): 200 байт (если массив средних изображений)
+    BOOLEAN (is_age_restricted): 1 байт
+    DECIMAL (sum_rating): 8 байт
+    TIMESTAMP (created_at): 8 байт
+    TIMESTAMP (updated_at): 8 байт
+    JSONB (category): 20 байт
+
+Итого: 1000 байт
+
+Таблица categories:
+
+    UUID (category_id): 16 байт
+    TEXT (name): 50 байт
+    TEXT (path): 50 байт
+    UUID (parent_id): 16 байт
+    INTEGER (product_count): 4 байта
+
+Итого: 136 байт
+
+Таблица characteristics_product:
+
+    UUID (characteristic_id): 16 байт
+    UUID (product_id): 16 байт
+    TEXT (name): 50 байт
+    TEXT (value): 50 байт
+    TEXT (ed_izmereniya): 15 байт
+
+Итого: 147 байт
+
+Таблица orders:
+
+    UUID (order_id): 16 байт
+    UUID (user_id): 16 байт
+    TEXT (status): 20 байт
+    DECIMAL (subtotal): 8 байт
+    DECIMAL (tax): 8 байт
+    DECIMAL (shipping_cost): 8 байт
+    DECIMAL (total): 8 байт
+    TIMESTAMP (created_at): 8 байт
+    TIMESTAMP (updated_at): 8 байт
+
+Итого: 76 байт
+
+Таблица order_items:
+
+    UUID (order_item_id): 16 байт
+    UUID (order_id): 16 байт
+    UUID (product_id): 16 байт
+    TEXT (product_name): 50 байт
+    TEXT (product_image): 50 байт
+    TEXT (product_main_image): 50 байт
+    DECIMAL (unit_price): 8 байт
+    INTEGER (quantity): 4 байта
+    DECIMAL (total_price): 8 байт
+
+Итого: 178 байт
+
+Таблица cart_items:
+
+    UUID (cart_item_id): 16 байт
+    UUID (user_id): 16 байт
+    UUID (product_id): 16 байт
+    TEXT (product_name): 50 байт
+    TEXT (product_main_image): 50 байт
+    DECIMAL (unit_price): 8 байт
+    INTEGER (quantity): 4 байта
+    TIMESTAMP (added_at): 8 байт
+
+Итого: 178 байт
+
+Таблица reviews:
+
+    UUID (review_id): 16 байт
+    UUID (user_id): 16 байт
+    UUID (seller_id): 16 байт
+    UUID (product_id): 16 байт
+    UUID (order_id): 16 байт
+    INTEGER (rating): 4 байта
+    TEXT (title): 50 байт
+    TEXT (comment): 500 байт
+    TEXT (product_name): 50 байт
+    TEXT[] (images): 200 байт (массив изображений)
+    BOOLEAN (is_verified): 1 байт
+    TIMESTAMP (created_at): 8 байт
+
+Итого: 893 байт
+
+Таблица addresses:
+
+    UUID (address_id): 16 байт
+    UUID (user_id): 16 байт
+    TEXT (type): 20 байт
+    TEXT (recipient): 50 байт
+    TEXT (line1): 50 байт
+    TEXT (line2): 50 байт
+    TEXT (city): 50 байт
+    TEXT (state): 50 байт
+    TEXT (postal_code): 15 байт
+    TEXT (country): 50 байт
+    TEXT (phone): 15 байт
+    BOOLEAN (is_default): 1 байт
+
+Итого: 359 байт
+
+Таблица payment_methods:
+
+    UUID (payment_method_id): 16 байт
+    UUID (user_id): 16 байт
+    TEXT (type): 20 байт
+    JSONB (details): 20 байт
+    BOOLEAN (is_default): 1 байт
+    TIMESTAMP (added_at): 8 байт
+
+Итого: 81 байт
+
+Таблица shipments:
+
+    UUID (shipment_id): 16 байт
+    UUID (order_id): 16 байт
+    TEXT (carrier): 50 байт
+    TEXT (tracking_number): 50 байт
+    TEXT (status): 20 байт
+    TIMESTAMP (shipped_at): 8 байт
+    TIMESTAMP (estimated_delivery): 8 байт
+    TIMESTAMP (delivered_at): 8 байт
+
+Итого: 176 байт
+
+Таблица search_index:
+
+    UUID (product_id): 16 байт
+    TEXT (search_vector): 500 байт
+    TEXT[] (suggest_terms): 200 байт (массив поисковых запросов)
+    JSONB (facets): 20 байт (оценочно, зависит от содержимого)
+
+Итого: 736 байт
+
+Таблица sessions:
+
+    UUID (session_id): 16 байт
+    UUID (user_id): 16 байт
+    TEXT (ip_address): 15 байт
+    JSONB (device_info): 20 байт
+    TIMESTAMP (created_at): 8 байт
+    TIMESTAMP (expires_at): 8 байт
+
+Итого: 83 байт
+
 
 ---
 
 <a name="block6"></a>
 
 ## **6. Выбор баз данных**
-
-<!-- ![DB scheme](img/db_type.png) -->
-<!-- ![DB scheme](img/upd_db_2025-04-07_1.png) -->
 
 ![DB scheme](img/db_10_draw.png)
 
