@@ -1,4 +1,4 @@
-<a href="https://www.mermaidchart.com/raw/816b763d-ef9f-4177-b073-3ff97b8bdc56?theme=light&version=v0.1&format=svg">SVG схема</a>
+<a href="img/Amazon-10.svg">SVG схема</a>
 
 ```
 mermaid
