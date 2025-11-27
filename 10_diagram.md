@@ -11,25 +11,17 @@ subgraph clients["Clients"]
   logistics_client["Logistics Client"]
 end
 
-subgraph edge_proxy["Edge Layer (DNS / Proxy / CORS)"]
-  Cloudflare["Cloudflare (DNS, CORS)"]
-  Route53["Route53"]
-  ALB["AWS ALB"]
-  public_nginx["Public Nginx"]
-  seller_nginx["Seller Nginx"]
-  logistics_nginx["Logistics Nginx"]
-end
-
-subgraph gateway_layer["Gateways"]
-  public_api_gateway["Public API Gateway"]
-  seller_api_gateway["Seller API Gateway"]
-  logistics_api_gateway["Logistics API Gateway"]
+subgraph proxy["DNS / Proxy / Balance"]
+  Cloudflare["BGP Anycast"]
+  L4-balancer["L4-balancer"]
+  nginx_L7["L7 баланчировка (Nginx)"]
+  cdn["CDN"]
+  api_gateway["Public API Gateway"]
 end
 
 subgraph backend["Backend Services"]
   AuthService["Auth Service"]
   UserService["User Service"]
-  ProductService["Product Service"]
   CartService["Cart Service"]
   OrderService["Order Service"]
   ReviewService["Review Service"]
@@ -37,27 +29,7 @@ subgraph backend["Backend Services"]
   SellerService["Seller Service"]
   SearchService["Search Service"]
   PaymentService["Payment Service"]
-  RecommendationService["Recommendation Service"]
-  ModerationService["Moderation Service"]
-  OrchestratorService["Orchestrator Service"]
-end
-
-subgraph workers["Workers"]
-  AuthWorker["Auth Worker"]
-  UserWorker["User Worker"]
-  ProductWorker["Product Worker"]
-  CartWorker["Cart Worker"]
-  OrderWorker["Order Worker"]
-  ReviewWorker["Review Worker"]
-  LogisticsWorker["Logistics Worker"]
-  SellerWorker["Seller Worker"]
-  SearchWorker["Search Worker"]
-  PaymentWorker["Payment Worker"]
-  RatingWorker["Rating Worker"]
-  RecommendationWorker["Recommendation Worker"]
-  ErrorRecommendationWorker["Error Recommendation Worker"]
-  PaymentErrorWorker["Payment Error Worker"]
-  UserActivityWorker["User Activity Worker"]
+  ProductService["Product Service"]
 end
 
 subgraph storage["Storage"]
@@ -67,29 +39,23 @@ subgraph storage["Storage"]
   RedisProductCache["Redis Cache (Products)"]
   RedisCart["Redis (Cart)"]
   PostgresOrders["PostgreSQL (Orders)"]
-  MongoReviews["MongoDB (Reviews)"]
+  PostgresReviews["PostgreSQL (Reviews)"]
   PostgresShipments["PostgreSQL (Shipments)"]
   PostgresSellers["PostgreSQL (Sellers)"]
-  ElasticSearch["ElasticSearch (Vector Counter)"]
-  RedisBaseFeed["Redis (Base Feed)"]
-  MongoPayments["MongoDB (Payments)"]
+  ElasticSearch["ElasticSearch"]
+  PostgresPayments["PostgreSQL (Payments)"]
   PostgresRatings["PostgreSQL (Ratings)"]
-  PostgresRecommendations["PostgreSQL (Recommendations)"]
-  S3["Amazon S3 (Images Optimized Upload)"]
-  S3Media["Amazon S3 (Product Media Files)"]
+  S3["Amazon S3"]
 end
 
 subgraph queues["Message Queues"]
   Kafka["Kafka"]
 end
 
-subgraph analytics["Analytics"]
-  ClickHouse["ClickHouse"]
-end
-
-subgraph monitoring["Monitoring"]
+subgraph monitoring["Monitoring & analytics"]
   Prometheus["Prometheus"]
   Grafana["Grafana"]
+  ClickHouse["ClickHouse"]
 end
 
 subgraph external["External APIs"]
@@ -97,102 +63,66 @@ subgraph external["External APIs"]
   LogisticsExternalAPI["Logistics API"]
 end
 
-%% Clients to Edge
+%% Clients
 mobile_client --> Cloudflare
 web_client --> Cloudflare
 seller_client --> Cloudflare
 logistics_client --> Cloudflare
-Cloudflare --> Route53 --> ALB
-ALB --> public_nginx & seller_nginx & logistics_nginx
+Cloudflare --> L4-balancer
+L4-balancer --> nginx_L7
 
-public_nginx --> public_api_gateway
-seller_nginx --> seller_api_gateway
-logistics_nginx --> logistics_api_gateway
+nginx_L7 --> api_gateway
+nginx_L7 --> cdn
+
+cdn --> S3
 
 %% Public API Gateway
-public_api_gateway --> AuthService
-public_api_gateway --> UserService
-public_api_gateway --> ProductService
-public_api_gateway --> CartService
-public_api_gateway --> OrderService
-public_api_gateway --> ReviewService
-public_api_gateway --> SearchService
-public_api_gateway --> RecommendationService
+api_gateway --> AuthService
+api_gateway --> UserService
+api_gateway --> ProductService
+api_gateway --> CartService
+api_gateway --> OrderService
+api_gateway --> ReviewService
+api_gateway --> SearchService
 
 %% Seller API Gateway
-seller_api_gateway --> SellerService
-seller_api_gateway --> ProductService
-seller_api_gateway --> OrderService
-seller_api_gateway --> LogisticsService
+api_gateway --> SellerService
+api_gateway --> ProductService
+api_gateway --> OrderService
+api_gateway --> LogisticsService
 
 %% Logistics API Gateway
-logistics_api_gateway --> LogisticsService
+api_gateway --> LogisticsService
 
 %% Backend Services to Workers
-AuthService --> AuthWorker
-UserService --> UserWorker
-ProductService --> ProductWorker
-CartService --> CartWorker
-OrderService --> OrderWorker
-ReviewService -->|async| ReviewWorker
-ReviewService -->|async| RatingWorker
-LogisticsService -->|async| LogisticsWorker
-SellerService --> SellerWorker
-SearchService --> SearchWorker
-RecommendationService --> RecommendationWorker
-PaymentService -->|async| PaymentWorker
-ModerationService --> ModerationService
-%% Error Handlers
-RecommendationService -->|failover| ErrorRecommendationWorker
-ErrorRecommendationWorker --> RedisBaseFeed
-PaymentService -->|failover| PaymentErrorWorker
+AuthService --> RedisSessions & PostgresUsers
+UserService --> RedisSessions & PostgresUsers
+ProductService --> PostgresProducts --> RedisProductCache
+ProductService --> S3
+CartService --> RedisCart
+OrderService --> PostgresOrders
+ReviewService -->|async| PostgresReviews
+ReviewService -->|async| PostgresRatings
+LogisticsService --> PostgresShipments
+SellerService --> PostgresSellers
+SearchService --> ElasticSearch
 
+PaymentService --> PostgresPayments
 
-%% Workers to Storage
-AuthWorker --> RedisSessions & PostgresUsers
-UserWorker --> PostgresUsers & RedisSessions
-ProductWorker --> PostgresProducts --> RedisProductCache
-ProductWorker --> S3
-ProductWorker --> S3Media
-CartWorker --> RedisCart
-OrderWorker --> PostgresOrders
-ReviewWorker --> MongoReviews
-LogisticsWorker --> PostgresShipments
-SellerWorker --> PostgresSellers
-SearchWorker --> ElasticSearch
-RecommendationWorker --> PostgresRecommendations
-PaymentWorker --> MongoPayments
-RatingWorker --> PostgresRatings
-UserActivityWorker --> ElasticSearch & PostgresRecommendations
-PostgresRecommendations --> RecommendationWorker
 
 %% Workers to External APIs
-PaymentWorker -->|async| PaymentGatewayAPI
-LogisticsWorker -->|async| LogisticsExternalAPI
+PaymentService -->|async| PaymentGatewayAPI
+LogisticsService -->|async| LogisticsExternalAPI
 
 %% Kafka Events
-workers -->|async| Kafka
-Kafka --> ModerationService
+AllServices -->|async| Kafka
+Kafka --> Prometheus
 Kafka --> ClickHouse
 
 %% Monitoring
 Prometheus --> Grafana
-public_api_gateway -.-> Prometheus
-seller_api_gateway -.-> Prometheus
-logistics_api_gateway -.-> Prometheus
-AuthService -.-> Prometheus
-UserService -.-> Prometheus
-ProductService -.-> Prometheus
-CartService -.-> Prometheus
-OrderService -.-> Prometheus
-ReviewService -.-> Prometheus
-SearchService -.-> Prometheus
-SellerService -.-> Prometheus
-LogisticsService -.-> Prometheus
-PaymentService -.-> Prometheus
-RecommendationService -.-> Prometheus
-ModerationService -.-> Prometheus
-OrchestratorService -.-> Prometheus
+
+
 
 classDef db fill:#ccf,stroke:#333,stroke-width:1px
 classDef backend fill:#cbd3f5,stroke:#333,stroke-width:1px
@@ -200,15 +130,15 @@ classDef services fill:#e0d1f5,stroke:#333,stroke-width:1px
 classDef proxy fill:#cce5cc,stroke:#333,stroke-width:1px
 classDef client fill:#f9f9f9,stroke:#333,stroke-width:1px
 classDef broker fill:#eeeeee,stroke:#333,stroke-width:1px
-classDef worker fill:#fff2cc,stroke:#333,stroke-width:1px
 
 class mobile_client,web_client,seller_client,logistics_client client
-class Cloudflare,Route53,ALB,public_nginx,seller_nginx,logistics_nginx proxy
-class public_api_gateway,seller_api_gateway,logistics_api_gateway backend
-class AuthService,UserService,ProductService,CartService,OrderService,ReviewService,LogisticsService,SellerService,SearchService,PaymentService,RecommendationService,ModerationService,OrchestratorService services
-class AuthWorker,UserWorker,ProductWorker,CartWorker,OrderWorker,ReviewWorker,LogisticsWorker,SellerWorker,SearchWorker,PaymentWorker,RatingWorker,RecommendationWorker,ErrorRecommendationWorker,PaymentErrorWorker,UserActivityWorker worker
-class RedisSessions,PostgresUsers,PostgresProducts,RedisProductCache,RedisCart,PostgresOrders,MongoReviews,PostgresShipments,PostgresSellers,ElasticSearch,MongoPayments,PostgresRatings,PostgresRecommendations,RedisBaseFeed,S3,S3Media db
+class Cloudflare,L4-balancer,nginx_L7,cdn proxy
+class api_gateway backend
+class AuthService,UserService,ProductService,CartService,OrderService,ReviewService,LogisticsService,SellerService,SearchService,PaymentService services
+
+class RedisSessions,PostgresUsers,PostgresProducts,RedisProductCache,RedisCart,PostgresOrders,PostgresReviews,PostgresShipments,PostgresSellers,ElasticSearch,PostgresPayments,PostgresRatings,S3 db
 class Kafka,ClickHouse broker
+
 ```
 
 ## **Описание микросервисов**
@@ -227,8 +157,7 @@ class Kafka,ClickHouse broker
 
 - Управление карточками товаров.
 - СУБД: PostgreSQL (Products), ElasticSearch (Search), Redis (Cache)
-- Хранение медиа: S3 + S3Media
-
+- Хранение медиа: S3
 ### **4. Cart Service**
 
 - Работа с корзиной пользователя.
@@ -242,7 +171,7 @@ class Kafka,ClickHouse broker
 ### **6. Review Service**
 
 - Добавление отзывов.
-- СУБД: MongoDB (Reviews)
+- СУБД: PostgreSQL (Reviews)
 - Публикация событий в Kafka.
 
 ### **7. Logistics Service**
@@ -265,7 +194,7 @@ class Kafka,ClickHouse broker
 ### **10. Payment Service**
 
 - Интеграция с `Payment Gateway API`.
-- СУБД: MongoDB (Payments)
+- СУБД: PostgreSQL (Payments)
 - Асинхронная публикация в Kafka.
 - Фолбэк: Payment Error Worker
 
