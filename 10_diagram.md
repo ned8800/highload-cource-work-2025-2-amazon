@@ -1,5 +1,8 @@
 <a href="img/Amazon-10.svg">SVG схема</a>
 
+<a href="https://www.mermaidchart.com/d/6798f124-5495-49bd-a40b-f81c14d99ee4">схема c кодом на www.mermaidchart.com</a>
+
+
 ```
 mermaid
 flowchart TD
